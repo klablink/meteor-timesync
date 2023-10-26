@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v0.5.4
+
+- Bump minimum Meteor version to 1.12
+- Use fetch instead of HTTP package
+
 ## v0.5.3
 
 - Bump minimum Meteor version to 1.12

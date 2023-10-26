@@ -57,26 +57,24 @@ else {
 var updateOffset = function() {
   var t0 = Date.now();
 
-  HTTP.get(syncUrl, function(err, response) {
-    var t3 = Date.now(); // Grab this now
-    if (err) {
-      //  We'll still use our last computed offset if is defined
-      log("Error syncing to server time: ", err);
-      if (++attempts <= maxAttempts)
-        Meteor.setTimeout(TimeSync.resync, 1000);
-      else
-        log("Max number of time sync attempts reached. Giving up.");
-      return;
-    }
-
-    attempts = 0; // It worked
-
-    var ts = parseInt(response.content);
-    SyncInternals.isSynced = true;
-    SyncInternals.offset = Math.round(((ts - t0) + (ts - t3)) / 2);
-    SyncInternals.roundTripTime = t3 - t0; // - (ts - ts) which is 0
-    SyncInternals.offsetDep.changed();
-  });
+  fetch(syncUrl)
+      .then(response => response.text())
+      .then(content => {
+        let t3 = Date.now(); // Grab this now
+        attempts = 0; // It worked
+        var ts = parseInt(content);
+        SyncInternals.isSynced = true;
+        SyncInternals.offset = Math.round(((ts - t0) + (ts - t3)) / 2);
+        SyncInternals.roundTripTime = t3 - t0; // - (ts - ts) which is 0
+        SyncInternals.offsetDep.changed();
+      })
+      .catch(err => {
+        log("Error syncing to server time: ", err);
+        if (++attempts <= maxAttempts)
+          Meteor.setTimeout(TimeSync.resync, 1000);
+        else
+          log("Max number of time sync attempts reached. Giving up.");
+      });
 };
 
 // Reactive variable for server time that updates every second.

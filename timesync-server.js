@@ -1,9 +1,7 @@
 // Use rawConnectHandlers so we get a response as quickly as possible
 // https://github.com/meteor/meteor/blob/devel/packages/webapp/webapp_server.js
 
-const url = new URL(Meteor.absoluteUrl("/_timesync"));
-
-WebApp.rawConnectHandlers.use(url.pathname,
+WebApp.rawConnectHandlers.use("/_timesync",
   function(req, res, next) {
     // Never ever cache this, otherwise weird times are shown on reload
     // http://stackoverflow.com/q/18811286/586086
