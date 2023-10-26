@@ -6,17 +6,17 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom(["1.12", "2.3"]);
+  api.versionsFrom(["1.9", "2.3"]);
 
   api.use([
     'check',
     'tracker',
-    'http'
+    'fetch'
   ], 'client');
 
   api.use(['webapp'], 'server');
 
-  api.use(['ecmascript']);
+  api.use(['ecmascript', 'modules']);
 
   // Our files
   api.addFiles('server/index.js', 'server');
