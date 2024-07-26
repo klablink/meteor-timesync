@@ -5,7 +5,7 @@ import { Meteor } from "meteor/meteor";
 
 const url = new URL(Meteor.absoluteUrl("/_timesync"));
 
-WebApp.rawConnectHandlers.use(url.pathname,
+WebApp.rawHandlers.use(url.pathname,
   function (req, res, next) {
     // Never ever cache this, otherwise weird times are shown on reload
     // http://stackoverflow.com/q/18811286/586086
