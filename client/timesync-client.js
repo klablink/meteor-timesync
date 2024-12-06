@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import { HTTP } from 'meteor/http';
+import { fetch } from 'meteor/fetch';
 
 TimeSync = {
   loggingEnabled: Meteor.isDevelopment,
@@ -72,8 +72,14 @@ const updateOffset = function () {
       handleResponse(t0, err, res);
     });
   } else {
-    HTTP.get(syncUrl, function (err, res) {
-      handleResponse(t0, err, res);
+    fetch(syncUrl).then( async function (res) {
+        if(res.ok){
+          handleResponse(t0, null, await res.text());
+        }else {
+          handleResponse(t0, res?.status, null);
+        }
+    }).catch(function (err) {
+        handleResponse(t0, err, null);
     });
   }
 };
